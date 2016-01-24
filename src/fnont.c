@@ -206,7 +206,7 @@ static FnError font_load_glyph(struct FnFont *font, uint32_t charpoint,
     }
 
     FT_BitmapGlyph bitmap_glyph = (FT_BitmapGlyph) ftglyph;
-    FT_Bitmap bitmap = bitmap_glyph->bitmap;
+    FT_Bitmap bitmap = bitmap_glyph->bitmap;:
 
     struct FnGlyph out_glyph = {
         0,
@@ -287,26 +287,26 @@ static FnError bin_init(struct FnAtlasBin *bin, uint32_t width, uint32_t height)
 static bool bin_fits(struct FnAtlasBin *bin, uint32_t idx, uint32_t width,
                      uint32_t height, uint32_t *y)
 {
-	uint32_t x = bin->skylines[idx].x;
-	if (x + width > bin->width)
-		return false;
+    uint32_t x = bin->skylines[idx].x;
+    if (x + width > bin->width)
+        return false;
 
-	int width_left = width;
-	int out_y = bin->skylines[idx].y;
+    int width_left = width;
+    int out_y = bin->skylines[idx].y;
 
     while (width_left > 0) {
-		out_y = out_y  > bin->skylines[idx].y ? out_y : bin->skylines[idx].y;
+        out_y = out_y  > bin->skylines[idx].y ? out_y : bin->skylines[idx].y;
 
         if (out_y + height > bin->height)
-			return false;
+            return false;
 
-		width_left -= bin->skylines[idx].width;
-		++idx;
-	}
+        width_left -= bin->skylines[idx].width;
+        ++idx;
+    }
 
     *y = out_y;
 
-	return true;
+    return true;
 }
 
 static void bin_skyline(struct FnAtlasBin *bin, uint32_t idx,
@@ -354,38 +354,38 @@ static struct FnRect bin_position(struct FnAtlasBin *bin, int width, int height,
     int new_height = INT_MAX;
     int new_idx = -1;
 
-	struct FnRect new_node = {0};
+    struct FnRect new_node = {0};
 
-	for (int i = 0; i < bin->size; ++i) {
-		uint32_t y = 0;
-		if (bin_fits(bin, i, width, height, &y)) {
-			if (y + height < new_height || (y + height == new_height && bin->skylines[i].width < new_width)) {
-				new_width = bin->skylines[i].width;
-				new_height = y + height;
-				new_idx = i;
+    for (int i = 0; i < bin->size; ++i) {
+        uint32_t y = 0;
+        if (bin_fits(bin, i, width, height, &y)) {
+            if (y + height < new_height || (y + height == new_height && bin->skylines[i].width < new_width)) {
+                new_width = bin->skylines[i].width;
+                new_height = y + height;
+                new_idx = i;
 
-				new_node.x = bin->skylines[i].x;
-				new_node.y = y;
-				new_node.w = width;
-				new_node.h = height;
-			}
-		}
+                new_node.x = bin->skylines[i].x;
+                new_node.y = y;
+                new_node.w = width;
+                new_node.h = height;
+            }
+        }
     }
 
     *best_width = new_width;
     *best_height = new_height;
     *best_idx = new_idx;
 
-	return new_node;
+    return new_node;
 }
 
 static bool bin_insert(struct FnAtlasBin *bin, int width, int height,
                        struct FnRect *rect)
 {
-	int best_width;
-	int best_height;
-	int best_idx;
-	struct FnRect new_node = bin_position(bin, width, height, &best_width,
+    int best_width;
+    int best_height;
+    int best_idx;
+    struct FnRect new_node = bin_position(bin, width, height, &best_width,
                                           &best_height, &best_idx);
 
     if (best_idx == -1)
@@ -394,18 +394,18 @@ static bool bin_insert(struct FnAtlasBin *bin, int width, int height,
     bin_skyline(bin, best_idx, new_node);
     *rect = new_node;
 
-	return true;
+    return true;
 }
 
 static void bin_merge(struct FnAtlasBin *bin)
 {
     for (int i = 0; i < bin->size - 1; ++i) {
-		if (bin->skylines[i].y == bin->skylines[i + 1].y) {
-			bin->skylines[i].width += bin->skylines[i + 1].width;
+        if (bin->skylines[i].y == bin->skylines[i + 1].y) {
+            bin->skylines[i].width += bin->skylines[i + 1].width;
             bin->size -= i + 1;
 
             i--;
-		}
+        }
     }
 }
 
